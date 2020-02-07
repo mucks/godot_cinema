@@ -1,0 +1,5 @@
+[gd_resource type="GDNativeLibrary" format=2]
+
+[resource]
+entry/X11.64 = "res://gdnative/lib/libgodot_cinema_rs.so"
+dependency/X11.64 = [  ]
