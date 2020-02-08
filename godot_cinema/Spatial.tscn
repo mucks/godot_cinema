@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://scripts/Player.gd" type="Script" id=1]
 [ext_resource path="res://gdnative/native_scripts/Screen.gdns" type="Script" id=2]
 [ext_resource path="res://scripts/Main.gd" type="Script" id=3]
+[ext_resource path="res://scripts/YoutubeUrlEntry.gd" type="Script" id=4]
 
 [sub_resource type="CapsuleShape" id=1]
 radius = 0.6
@@ -51,17 +52,35 @@ mesh = SubResource( 3 )
 material/0 = SubResource( 4 )
 
 [node name="Screen" type="Spatial" parent="."]
-transform = Transform( 2.85276, 0, 0, 0, 1.5459, 0, 0, 0, 1, 0, 1.66355, -14.0012 )
+transform = Transform( 10, 0, 0, 0, 5, 0, 0, 0, 1, 0, 6.88151, -16.5384 )
 script = ExtResource( 2 )
 
 [node name="Screen" type="StaticBody" parent="Screen"]
-transform = Transform( -1, 0, -3.25841e-07, 0, 1, 0, 3.25841e-07, 0, -1, 0, 0, 0 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Screen/Screen"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 0.1, 0, 0, 0 )
 shape = SubResource( 5 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Screen/Screen/CollisionShape"]
-transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -10, -1.62921e-06, 0, 0, 0 )
+transform = Transform( 1, 0, 0, 0, -1.62921e-06, -1, 0, 10, -1.62921e-07, 0, 0, 0 )
 mesh = SubResource( 6 )
 material/0 = SubResource( 7 )
+
+[node name="YoutubeUrlEntry" type="LineEdit" parent="."]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -129.631
+margin_top = -10.5514
+margin_right = 170.369
+margin_bottom = 29.4486
+placeholder_text = "Enter youtube url..."
+placeholder_alpha = 0.708
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="text_entered" from="YoutubeUrlEntry" to="Screen" method="_on_youtube_url_entry_text_entered"]
+[connection signal="text_entered" from="YoutubeUrlEntry" to="YoutubeUrlEntry" method="_on_YoutubeUrlEntry_text_entered"]

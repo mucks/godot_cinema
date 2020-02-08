@@ -12,8 +12,7 @@ pub fn get_youtube_video_url(youtube_url: &str) -> String {
         .output()
         .unwrap()
         .stdout;
-    let url = String::from_utf8(stdout).unwrap();
-    url
+    String::from_utf8(stdout).unwrap()
 }
 
 fn get_youtube_video(video_url: &str) -> Option<VideoCapture> {
@@ -82,16 +81,23 @@ impl Screen {
     }
 
     #[export]
-    fn _ready(&mut self, owner: Spatial) {
+    fn _on_youtube_url_entry_text_entered(&mut self, owner: Spatial, youtube_url: String) {
+        self.add_youtube_video(youtube_url)
+    }
+
+    fn add_youtube_video(&mut self, youtube_url: String) {
         let (tx, rx) = mpsc::channel();
         self.rx = Some(rx);
+
         std::thread::spawn(move || {
-            let youtube_url = "https://www.youtube.com/watch?v=aqz-KE-bpKQ";
-            let video_url = get_youtube_video_url(youtube_url);
+            let video_url = get_youtube_video_url(youtube_url.as_str());
             let vid = get_youtube_video(&video_url).unwrap();
             tx.send(vid).unwrap();
         });
     }
+
+    #[export]
+    fn _ready(&mut self, owner: Spatial) {}
 
     #[export]
     fn _process(&mut self, owner: Spatial, delta: f64) {
@@ -103,25 +109,29 @@ impl Screen {
         if let Some(vid) = &mut self.vid {
             let mut frame = core::Mat::default().unwrap();
             vid.read(&mut frame).unwrap();
+
             let img = frame_to_img(&mut frame);
-
-            let mut txt = ImageTexture::new();
-            txt.create_from_image(Some(img), 7);
-
-            let path = NodePath::from_str("Screen/CollisionShape/MeshInstance");
-            unsafe {
-                let mesh = owner
-                    .get_node(path)
-                    .unwrap()
-                    .cast::<MeshInstance>()
-                    .unwrap();
-                if let Some(mat) = mesh.get_surface_material(0) {
-                    let mut mat = mat.cast::<SpatialMaterial>().unwrap();
-                    mat.set_texture(0, txt.cast::<Texture>());
-                }
-            }
+            unsafe { self.apply_img_to_texture(owner, img) }
         }
     }
+
+    unsafe fn apply_img_to_texture(&mut self, owner: Spatial, img: Image) {
+        let mut txt = ImageTexture::new();
+        txt.create_from_image(Some(img), 7);
+
+        let path = NodePath::from_str("Screen/CollisionShape/MeshInstance");
+
+        let mesh = owner
+            .get_node(path)
+            .unwrap()
+            .cast::<MeshInstance>()
+            .unwrap();
+        if let Some(mat) = mesh.get_surface_material(0) {
+            let mut mat = mat.cast::<SpatialMaterial>().unwrap();
+            mat.set_texture(0, txt.cast::<Texture>());
+        }
+    }
+
     #[export]
     fn get_img(&mut self, _owner: Spatial) -> Image {
         if let Some(img) = &self.img {

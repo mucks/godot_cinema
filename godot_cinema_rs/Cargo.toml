@@ -9,6 +9,7 @@ edition = "2018"
 [dependencies]
 gdnative = "0.7"
 opencv = "0.29"
+rodio = "0.10"
 
 [lib]
 crate-type = ["cdylib"]
