@@ -11,12 +11,14 @@ height = 2.0
 
 [sub_resource type="BoxShape" id=2]
 
-[sub_resource type="PlaneMesh" id=3]
+[sub_resource type="SpatialMaterial" id=3]
+albedo_color = Color( 0, 0, 0, 1 )
 
-[sub_resource type="SpatialMaterial" id=4]
-albedo_color = Color( 0.027451, 0.0313726, 0.270588, 1 )
+[sub_resource type="PlaneMesh" id=4]
+material = SubResource( 3 )
 
 [sub_resource type="BoxShape" id=5]
+extents = Vector3( 1, 1.14486, 1 )
 
 [sub_resource type="PlaneMesh" id=6]
 
@@ -48,23 +50,26 @@ shape = SubResource( 2 )
 
 [node name="Ground" type="MeshInstance" parent="Ground/CollisionShape"]
 transform = Transform( 1, 0, 0, 0, 15, 0, 0, 0, 1, 0, 1, 0 )
-mesh = SubResource( 3 )
-material/0 = SubResource( 4 )
+mesh = SubResource( 4 )
+material/0 = null
 
 [node name="Screen" type="Spatial" parent="."]
-transform = Transform( 10, 0, 0, 0, 5, 0, 0, 0, 1, 0, 6.88151, -16.5384 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.88151, -16.5384 )
 script = ExtResource( 2 )
 
 [node name="Screen" type="StaticBody" parent="Screen"]
+transform = Transform( 10, 0, 0, 0, 6, 0, 0, 0, 1, 0, 0, 0 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Screen/Screen"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 0.1, 0, 0, 0 )
 shape = SubResource( 5 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Screen/Screen/CollisionShape"]
-transform = Transform( 1, 0, 0, 0, -1.62921e-06, -1, 0, 10, -1.62921e-07, 0, 0, 0 )
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -4.73458e-05, 0, -0.00050354 )
 mesh = SubResource( 6 )
 material/0 = SubResource( 7 )
+
+[node name="Audio" type="AudioStreamPlayer3D" parent="Screen"]
 
 [node name="YoutubeUrlEntry" type="LineEdit" parent="."]
 visible = false
@@ -82,5 +87,8 @@ script = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="DirectionalLight" type="DirectionalLight" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.675114, 0.737714, 0, -0.737714, 0.675114, 0, 20.4882, 20.9013 )
 [connection signal="text_entered" from="YoutubeUrlEntry" to="Screen" method="_on_youtube_url_entry_text_entered"]
 [connection signal="text_entered" from="YoutubeUrlEntry" to="YoutubeUrlEntry" method="_on_YoutubeUrlEntry_text_entered"]
